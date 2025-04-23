@@ -1,6 +1,6 @@
 # UI5 Tutorial
 
-## Walkthrough
+## Walkthrough - Helloworld
 
 1. Initilize node app.
 
@@ -66,11 +66,11 @@ Create `index.html` under `webapp` directory with the following content.
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<title>UI5 Walkthrough</title>
+  <meta charset="utf-8">
+  <title>UI5 Walkthrough</title>
 </head>
 <body>
-	<div>Hello World</div>
+  <div>Hello World</div>
 </body>
 </html>
 ```
@@ -81,5 +81,4 @@ Execute `npm start` to start the web server and open a new browser window to acc
 
 5. Reference
 
-- https://www.youtube.com/watch?v=C9cK2Z2JDLg
 - https://sapui5.hana.ondemand.com/#/topic/2680aa9b16c14a00b01261d04babbb39
