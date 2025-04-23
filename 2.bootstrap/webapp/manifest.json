@@ -1,5 +1,37 @@
 {
   "sap.app": {
-    "id": "ui5.getting-started"
+    "id": "my.app",
+    "type": "application",
+    "title": "UI5 Hello World",
+    "applicationVersion": {
+      "version": "1.0.0"
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "rootView": {
+      "viewName": "my.app.view.Main",
+      "type": "XML",
+      "id": "mainView"
+    },
+    "dependencies": {
+      "minUI5Version": "1.108.0",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {}
+      }
+    },
+    "routing": {},
+    "models": {},
+    "preload": {
+      "enabled": false
+    }
   }
 }

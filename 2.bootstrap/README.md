@@ -1,134 +1,154 @@
 # UI5 Tutorial
 
-## Getting Started
+## Bootstrap
 
-1. Initilize node app.
+Ask ChatGPT for `hello world of UI5 app`.
 
-```sh
-npm init --yes
-```
-
-File `package.json` will be created.
-
-```json
-{
-  "name": "getting-started",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
-}
-```
-
-2. Initialize ui5 app
-
-Create `webapp` directory.
+1. Project structure
 
 ```sh
-mkdir webapp
+webapp/
+├── index.html
+├── Component.js
+├── manifest.json
+├── view/
+│   └── Main.view.xml
+├── controller/
+│   └── Main.controller.js
 ```
 
-Create `manifest.json` manually.
+2. index.html
 
-```sh
-cd webapp
-touch manifest.json
-```
-
-With the following content.
-
-```json
-{
-  "sap.app": {
-    "id": "ui5.getting-started"
-  }
-}
-```
-
-Create UI5 configuration file.
-
-```sh
-ui5 init
-```
-
-File `ui5.yaml` will be created.
-
-```yaml
-specVersion: "4.0"
-metadata:
-  name: getting-started
-type: application
-```
-
-Use `SAP UI5`.
-
-```sh
-ui5 use sapui5@latest
-
-Updated configuration written to ui5.yaml
-This project is now using SAPUI5 version 1.135.0
-```
-
-`ui5.yaml` will be updated with `framework` configuration.
-
-```yaml
-specVersion: "4.0"
-metadata:
-  name: getting-started
-type: application
-framework:
-  name: SAPUI5
-  version: "1.135.0"
-```
-
-You can also choose to use `Open UI5` instead of `SAP UI5`.
-
-```sh
-ui5 use openui5@latest
-```
-
-3. Create index.html
-
-Create `index.html` under `webapp` directory with the following content.
+Update index.html with the following content.
 
 ```html
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>SAPUI5 Getting Started</title>
-  </head>
-  <body>
-    <h1>Hello UI5!</h1>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <title>UI5 Hello World</title>
+  <script
+    id="sap-ui-bootstrap"
+    src="https://sdk.openui5.org/resources/sap-ui-core.js"
+    data-sap-ui-theme="sap_fiori_3"
+    data-sap-ui-libs="sap.m"
+    data-sap-ui-async="true"
+    data-sap-ui-onInit="module:sap/ui/core/ComponentSupport"
+    data-sap-ui-resourceroots='{
+      "my.app": "./"
+    }'>
+  </script>
+</head>
+<body class="sapUiBody" id="content">
+  <div data-sap-ui-component data-name="my.app" data-id="container" data-settings='{"id" : "myApp"}'></div>
+</body>
 </html>
 ```
 
-4. Run UI5 app
+3. Component.js
 
-```sh
-ui5 serve
+Create `Component.js` under `webapp` directory.
 
-Server started
-URL: http://localhost:8080
+```javascript
+sap.ui.define([
+  "sap/ui/core/UIComponent",
+  "sap/ui/model/json/JSONModel"
+], function (UIComponent, JSONModel) {
+  "use strict";
+
+  return UIComponent.extend("my.app.Component", {
+    metadata: {
+      manifest: "json"
+    },
+
+    init: function () {
+      UIComponent.prototype.init.apply(this, arguments);
+    }
+  });
+});
 ```
 
-Access http://localhost:8080 in browser, you should see all files under `webapp` directory. Access http://localhost:8080/index.html and you should see the content of `index.html`.
+4. manifest.json
 
-You can also run `ui5 serve -o index.html` to directly access the index page in browser. Add this script into `package.json`, so you can simply run `npm start` to let browser directly access http://localhost:8080/index.html.
+Update `manifest.json` under `webapp` directory.
 
 ```json
-  "scripts": {
-    "start": "ui5 serve -o index.html"
+{
+  "sap.app": {
+    "id": "my.app",
+    "type": "application",
+    "title": "UI5 Hello World",
+    "applicationVersion": {
+      "version": "1.0.0"
+    }
   },
+  "sap.ui": {
+    "technology": "UI5",
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "rootView": {
+      "viewName": "my.app.view.Main",
+      "type": "XML",
+      "id": "mainView"
+    },
+    "dependencies": {
+      "minUI5Version": "1.108.0",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {}
+      }
+    },
+    "routing": {},
+    "models": {}
+  }
+}
 ```
 
-5. Reference
+5. view/Main.view.xml
+
+Create `Main.view.xml` under `webapp/view` directory.
+
+```xml
+<mvc:View
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  controllerName="my.app.controller.Main">
+  <Page title="Hello UI5">
+    <content>
+      <Text text="Hello World!" />
+    </content>
+  </Page>
+</mvc:View>
+```
+
+6. controller/Main.controller.js
+
+Create `Main.controller.js` under `webapp/controller` directory.
+
+```javascript
+sap.ui.define([
+  "sap/ui/core/mvc/Controller"
+], function (Controller) {
+  "use strict";
+
+  return Controller.extend("my.app.controller.Main", {
+    onInit: function () {
+      // Optional: do something on init
+    }
+  });
+});
+```
+
+7. Test
+
+Start the app with `npm start` and open `index.html` in a browser, and you’ll see “Hello World!” inside a UI5 `sap.m.Page`.
+
+8. Reference
 
 - https://www.youtube.com/watch?v=C9cK2Z2JDLg
 - https://sapui5.hana.ondemand.com/#/topic/851bde42e4e1410c96abbe402fa9128c

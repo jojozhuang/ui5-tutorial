@@ -1,10 +1,21 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>SAPUI5 Getting Started</title>
-  </head>
-  <body>
-    <h1>Hello UI5!</h1>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <title>UI5 Hello World</title>
+  <script
+    id="sap-ui-bootstrap"
+    src="https://sdk.openui5.org/resources/sap-ui-core.js"
+    data-sap-ui-theme="sap_fiori_3"
+    data-sap-ui-libs="sap.m"
+    data-sap-ui-async="true"
+    data-sap-ui-on-init="module:sap/ui/core/ComponentSupport"
+    data-sap-ui-resource-roots='{
+      "my.app": "./"
+    }'>
+  </script>
+</head>
+<body class="sapUiBody" id="content">
+  <div data-sap-ui-component data-name="my.app" data-id="container" data-settings='{"id" : "my.app"}'></div>
+</body>
 </html>
