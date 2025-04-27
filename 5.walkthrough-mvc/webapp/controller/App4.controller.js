@@ -5,8 +5,8 @@ sap.ui.define([
   "use strict";
 
   return Controller.extend("ui5.walkthrough.controller.App4", {
-     onShowHello() {
-        MessageToast.show("Hello World from MessageToast");
-     }
+    onShowHello() {
+      MessageToast.show("Hello World from MessageToast");
+    }
   });
 });

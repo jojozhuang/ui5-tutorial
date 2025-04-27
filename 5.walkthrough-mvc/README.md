@@ -227,3 +227,4 @@ Execute `ui5 serve` to start the app and open a new browser window to access htt
 - https://sapui5.hana.ondemand.com/#/topic/ddbceecd7d3d42eea9cf78a820a238fb
 - https://sapui5.hana.ondemand.com/#/topic/1409791afe4747319a3b23a1e2fc7064
 - https://sapui5.hana.ondemand.com/#/topic/50579ddf2c934ce789e056cfffe9efa9
+- https://sapui5.hana.ondemand.com/#/topic/f665d0de4dba405f9af4294de824b03b
