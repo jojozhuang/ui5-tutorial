@@ -4,9 +4,9 @@ sap.ui.define([
   "use strict";
 
   return Controller.extend("ui5.walkthrough.controller.App3", {
-     onShowHello() {
-        // show a native JavaScript alert
-        alert("Hello World from Controller");
-     }
+    onShowHello() {
+      // show a native JavaScript alert
+      alert("Hello World from Controller");
+    }
   });
 });
