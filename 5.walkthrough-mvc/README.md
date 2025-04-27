@@ -1,8 +1,10 @@
 # UI5 Tutorial
 
+Copy all files from `4.walkthrough-bootstrap`.
+
 ## Walkthrough - MVC Controls
 
-Copy all files from `4.walkthrough-bootstrap`.
+We will replace the "Hello World" text in the HTML body by the SAPUI5 control `sap/m/Text`. In the beginning, we will use the JavaScript control API to set up the UI, the control instance is then placed into the HTML body.
 
 1. Update index.html
 
@@ -54,6 +56,8 @@ Execute `ui5 serve` to start the app and open a new browser window to access htt
 
 ## Walkthrough - MVC Views
 
+Putting all our UI into the index.js file will very soon result in a messy setup, and there is quite a bit of work ahead of us. So let's do a first modularization by putting the `sap/m/Text` control into a dedicated view.
+
 1. Create App2.view.xml
 
 Create `webapp/view/App2.view.xml` with the following content. Inside the `View` tag, we add the declarative definition of our `Text` control.
@@ -95,6 +99,8 @@ data-sap-ui-on-init="module:ui5/walkthrough/index2"
 Execute `ui5 serve` to start the app and open a new browser window to access http://localhost:8080/index2.html. You should see `Hello World from MVC View` in the home page.
 
 ## Walkthrough - MVC Controllers
+
+In this step, we replace the text with a button and show the "Hello World" message when the button is pressed. The handling of the button's press event is implemented in the `controller` of the view.
 
 1. Create App3.view.xml
 
@@ -160,9 +166,11 @@ Execute `ui5 serve` to start the app and open a new browser window to access htt
 
 ## Walkthrough - MVC Modules
 
+In SAPUI5, resources are often referred to as modules. In this step, we replace the alert from the last exercise with a proper Message Toast from the sap.m library.
+
 1. Create App4.view.xml
 
-Create `webapp/view/App3.view.xml` with the following content. We add a button with text "Say Hello". The button triggers the `.onShowHello` event handler function when being pressed. We also have to set `controllerName` attribute of the view. The controllerName is a combination of the namespace of your application followed by the actual name of the controller, it's actually pointing to `App4.controller.js`.
+Create `webapp/view/App4.view.xml` with the following content. We add a button with text "Say Hello". The button triggers the `.onShowHello` event handler function when being pressed. We also have to set `controllerName` attribute of the view. The controllerName is a combination of the namespace of your application followed by the actual name of the controller, it's actually pointing to `App4.controller.js`.
 
 ```xml
 <mvc:View
@@ -221,6 +229,88 @@ data-sap-ui-on-init="module:ui5/walkthrough/index4"
 5. Run UI5 app
 
 Execute `ui5 serve` to start the app and open a new browser window to access http://localhost:8080/index4.html. You should see `Say Hello` button in the home page. Click on it, and you should see a toast message `Hello World from MessageToast`.
+
+## Walkthrough - MVC Model
+
+We will add an input field to our app, bind its value to the model, and bind the same value to the description of the input field. The description will be directly updated as the user types.
+
+1. Create App5.view.xml
+
+Create `webapp/view/App5.view.xml` with the following content. We add an `sap/m/Input` control to the view. With this, the user can enter a recipient for the greetings. We bind its value to a SAPUI5 model by using the declarative binding syntax for XML views.
+
+```xml
+<mvc:View
+  controllerName="ui5.walkthrough.controller.App5"
+  xmlns="sap.m"
+  xmlns:mvc="sap.ui.core.mvc">
+  <Button
+    text="Say Hello"
+    press=".onShowHello"/>
+  <Input
+    value="{/recipient/name}"
+    description="Hello {/recipient/name}"
+    valueLiveUpdate="true"
+    width="60%"/>
+</mvc:View>
+```
+
+2. Create App5.controller.js
+
+Create `webapp/controller/App5.controller.js` with the following content. We add an `onInit` function to the controller and we instantiate a JSON model with a single property `recipient`, it contains one additional property for the `name`. To be able to use this model from within the XML view, we call the `setModel` function on the view and pass on our newly created model.
+
+```js
+sap.ui.define([
+  "sap/ui/core/mvc/Controller",
+  "sap/m/MessageToast",
+  "sap/ui/model/json/JSONModel"
+], (Controller, MessageToast, JSONModel) => {
+  "use strict";
+
+  return Controller.extend("ui5.walkthrough.controller.App5", {
+    onInit() {
+      // set data model on view
+      const oData = {
+        recipient : {
+          name : "World"
+        }
+      };
+      const oModel = new JSONModel(oData);
+      this.getView().setModel(oModel);
+    },
+    onShowHello() {
+      MessageToast.show("Hello World from MessageToast5");
+    }
+  });
+});
+```
+
+3. Create index5.js
+
+Create `webapp/index5.js` with the following content.
+
+```js
+sap.ui.define([
+  "sap/ui/core/mvc/XMLView"
+], (XMLView) => {
+  "use strict";
+
+  XMLView.create({
+    viewName: "ui5.walkthrough.view.App5"
+  }).then((oView) => oView.placeAt("content"));
+});
+```
+
+4. Create index5.html
+
+Create `webapp/index5.html` by copying `webapp/index.html`, update `data-sap-ui-on-init` with the new index file `index5`.
+
+```html
+data-sap-ui-on-init="module:ui5/walkthrough/index5"
+```
+
+5. Run UI5 app
+
+Execute `ui5 serve` to start the app and open a new browser window to access http://localhost:8080/index5.html. You should see an input box at right side of "Say Hello" button with content "World". Type anything in the box, you should see the description at right is being updated accordingly.
 
 ## Reference
 
