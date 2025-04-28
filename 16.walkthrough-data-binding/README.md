@@ -211,6 +211,30 @@ sap.ui.define([
 
 Execute `ui5 serve` to start the app and open a new browser window to access http://localhost:8080/index.html. You should see the list of invoices with prices and number units.
 
+## Walkthrough - Expression Binding
+
+In this step, we will use expressions to format our price according to the current number in the data model.
+
+1. Update InvoiceList.view.xml
+
+Update `webapp/view/InvoiceList.view.xml` with the following content. We add the property `numberState` in our declarative view and introduce a new binding syntax that starts with = inside the brackets. This symbol is used to initiate a new binding syntax, it's called an `expression` and can do simple calculation logic like the ternary operator shown here.
+
+```xml
+<mvc:View>
+  <List>
+    <items>
+      <ObjectListItem
+        ...
+        numberState="{= ${invoice>ExtendedPrice} > 50 ? 'Error' : 'Success' }"/>
+    </items>
+  </List>
+</mvc:View>
+```
+
+2. Run UI5 app
+
+Execute `ui5 serve` to start the app and open a new browser window to access http://localhost:8080/index.html. You should see the list of invoices with prices and number units. The price is now formatted according to its number. If price is larger than 50, it will be displayed in red, otherwise it will be in green.
+
 ## Reference
 
 - https://sapui5.hana.ondemand.com/#/topic/bf71375454654b44af01379a3c3a6273
