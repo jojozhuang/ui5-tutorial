@@ -1,6 +1,6 @@
 # UI5 Tutorial
 
-Copy all files from the last `18.walkthrough-filtering-and-sorting`.
+Copy all files from the last `17.walkthrough-formatting`.
 
 ## Walkthrough - Filtering and Sorting
 
