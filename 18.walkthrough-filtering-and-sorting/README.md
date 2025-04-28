@@ -82,6 +82,65 @@ sap.ui.define([
 
 Execute `ui5 serve` to start the app and open a new browser window to access http://localhost:8080/index.html. You should see a search field above the list. Type anything and click the search icon, the list should be refreshed accordingly.
 
+## Walkthrough - Sorting and Grouping
+
+In this step, we sort the list alphabetically instead of just showing the order from the data model. Additionally, we introduce groups and add the company that ships the products so that the data is easier to consume.
+
+1. Update InvoiceList.view.xml
+
+Update `webapp/view/InvoiceList.view.xml` with the following content. We add a declarative `sorter` to our binding syntax. As usual, we transform the simple binding syntax to the object notation, specify the path to the data, and now add an additional sorter property. We specify the data path by which the invoice items should be sorted, and UI5 will take care of the rest. By default, the sorting is ascending, but you could also add a property `descending` with the value true inside the sorter property to change the sorting order.
+
+```xml
+<mvc:View
+  controllerName="ui5.walkthrough.controller.InvoiceList"
+  xmlns="sap.m"
+  xmlns:mvc="sap.ui.core.mvc">
+  <List
+    id="invoiceList"
+    class="sapUiResponsiveMargin"
+    width="auto"
+    items="{
+      path : 'invoice>/Invoices',
+      sorter : {
+        path : 'ProductName' 
+      }
+    }" >
+    ...
+   </List>
+</mvc:View>
+```
+
+If we run the app now we can see a list of invoices sorted by the name of the products.
+
+2. Update InvoiceList.view.xml
+
+Update `webapp/view/InvoiceList.view.xml` with the following content. We modify the view and add a different sorter, or better; we change the sorter and set the attribute `group` to true. We also specify the path to the `ShipperName` data field. This groups the invoice items by the shipping company.
+
+As with the sorter, no further action is required. The list and the data binding features of SAPUI5 will do the trick to display group headers automatically and categorize the items in the groups. We could define a custom group header factory if we wanted by setting the `groupHeaderFactory` property, but the result looks already fine.
+
+```xml
+<mvc:View
+  controllerName="ui5.walkthrough.controller.InvoiceList"
+  xmlns="sap.m"
+  xmlns:mvc="sap.ui.core.mvc">
+  <List
+    id="invoiceList"
+    class="sapUiResponsiveMargin"
+    width="auto"
+    items="{
+      path : 'invoice>/Invoices',
+      sorter : {
+        path : 'ShipperName',
+        group : true
+      }
+    }" >
+    ...
+   </List>
+</mvc:View>
+```
+
+The list is now sorted and grouped by the shipping company.
+
 ## Reference
 
 - https://sapui5.hana.ondemand.com/#/topic/5295470d7eee46c1898ee46c1b9ad763
