@@ -28,13 +28,13 @@
         numberState="{= ${invoice>ExtendedPrice} > 50 ? 'Error' : 'Success' }">
         <firstStatus>
           <ObjectStatus
-              core:require="{
-                  Formatter: 'ui5/walkthrough/model/formatter'
-              }"
-              text="{
-                  path: 'invoice>Status',
-                  formatter: 'Formatter.statusText.bind($controller)'
-              }"/>
+            core:require="{
+              Formatter: 'ui5/walkthrough/model/formatter'
+            }"
+            text="{
+              path: 'invoice>Status',
+              formatter: 'Formatter.statusText.bind($controller)'
+            }"/>
         </firstStatus>
       </ObjectListItem>
     </items>
