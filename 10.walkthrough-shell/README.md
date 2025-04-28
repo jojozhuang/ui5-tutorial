@@ -1,6 +1,6 @@
 # UI5 Tutorial
 
-Copy all files from the last `8.walkthrough-pages-and-panels`.
+Copy all files from the last `9.walkthrough-pages-and-panels`.
 
 ## Walkthrough - Shell Control as Container
 
