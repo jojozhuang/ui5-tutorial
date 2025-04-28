@@ -4,7 +4,7 @@ Copy all files from the last `6.walkthrough-translation`.
 
 ## Walkthrough - Component Configuration
 
-After we have introduced all three parts of the Model-View-Controller (MVC) concept, we now come to another important structural aspect of SAPUI5, `component`.
+In this step, we will encapsulate all UI assets in a `component` that is independent from our index.html file. Components are independent and reusable parts used in SAPUI5 applications. Whenever we access resources, we will now do this relatively to the component (instead of relatively to the index.html). This architectural change allows our app to be used in more flexible environments than our static index.html page, such as in a surrounding container like the SAP Fiori launchpad.
 
 1. Create Component.js
 
@@ -97,8 +97,8 @@ sap.ui.define([
 
 4. Run UI5 app
 
-Execute `ui5 serve` to start the app and open a new browser window to access http://localhost:8080/index.html. You should see an input box at right side of "Say Hello" button with content "World". If you change the value of `showHelloButtonText` and `helloMsg` in `i18n.properties` file, you should see the new text in browser.
+Execute `ui5 serve` to start the app and open a new browser window to access http://localhost:8080/index.html. You should see an input box at right side of "Say Hello" button with content "World".
 
 ## Reference
 
-- https://sapui5.hana.ondemand.com/#/topic/df86bfbeab0645e5b764ffa488ed57dc
+- https://sapui5.hana.ondemand.com/#/topic/4cfa60872dca462cb87148ccd0d948ee
