@@ -19,7 +19,7 @@ webapp/
 
 2. index.html
 
-Update index.html with the following content.
+Update `webapp/index.html` with the following content.
 
 ```html
 <!DOCTYPE html>

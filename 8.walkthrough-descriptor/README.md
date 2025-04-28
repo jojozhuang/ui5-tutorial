@@ -6,6 +6,21 @@ Copy all files from the last `7.walkthrough-component`.
 
 All application-specific configuration settings will now further be put in a separate descriptor file called `manifest.json`. This clearly separates the application coding from the configuration settings and makes our app even more flexible.
 
+Our project will look like below structure.
+
+```sh
+webapp/
+├── index.html
+├── Component.js
+├── manifest.json
+├── view/
+│   └── App.view.xml
+├── controller/
+│   └── App.controller.js
+├── i18n/
+│   └── i18n.properties
+```
+
 1. Update manifest.js
 
 Create `webapp/manifest.json` with the following content. The content of the manifest.json file is a configuration object in JSON format that contains all global application settings and parameters. The manifest file is called the descriptor for applications, components, and libraries and is also referred to as `descriptor` or "app descriptor" when used for applications. It is stored in the webapp folder and read by SAPUI5 to instantiate the component. There are three important sections defined by namespaces in the manifest.json file:
@@ -39,8 +54,8 @@ Create `webapp/manifest.json` with the following content. The content of the man
     "dependencies": {
       "minUI5Version": "1.135.0",
       "libs": {
-      "sap.ui.core": {},
-      "sap.m": {}
+        "sap.ui.core": {},
+        "sap.m": {}
       }
     },
     "models": {
