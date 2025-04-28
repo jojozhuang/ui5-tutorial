@@ -2,11 +2,11 @@
 
 Copy all files from the last `8.walkthrough-descriptor`.
 
-## Walkthrough - Descriptor for Applications
+## Walkthrough - Pages and Panels
 
 We will use two controls from the `sap.m` library to add a bit more "bling" to our UI. You will also learn about control aggregations in this step.
 
-1. Update manifest.js
+1. Update App.view.xml
 
 Update `webapp/view/App.view.xml` with the following content. We put both the input field and the button inside a containing control called `sap/m/Page`. The page provides an aggregation to `0..N` other controls called content. It also displays the title attribute in a header section on top of the content. The page itself is placed into the pages aggregation of another control called `sap/m/App` which does the following important things for us:
 
