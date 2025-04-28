@@ -17,6 +17,8 @@ webapp/
 │   └── Main.controller.js
 ```
 
+This project is similar with https://github.com/jojozhuang/ui5-tutorial/tree/main/8.walkthrough-descriptor . Both are using `manifest.json` to manage the UI5 configuraiton.
+
 2. index.html
 
 Update `webapp/index.html` with the following content.
