@@ -1,8 +1,8 @@
 # UI5 Tutorial
 
-Copy all files from the last `14.walkthrough-dialogs-and-fragments`.
+Copy all files from the last `15.walkthrough-icon`.
 
-## Walkthrough - Icons
+## Walkthrough - Data Binding
 
 In this step, we will add an icon to greet our users when the dialog is opened.
 
@@ -51,4 +51,6 @@ Execute `ui5 serve` to start the app and open a new browser window to access htt
 
 ## Reference
 
-- https://sapui5.hana.ondemand.com/#/topic/776f7352807e4f82b18176c8fbdc0c56
+- https://sapui5.hana.ondemand.com/#/topic/bf71375454654b44af01379a3c3a6273
+- https://sapui5.hana.ondemand.com/#/topic/dfe04650afc046e0802abb1a1a90d2d9
+- https://sapui5.hana.ondemand.com/#/topic/c98d57347ba444c6945f596584d2db45
