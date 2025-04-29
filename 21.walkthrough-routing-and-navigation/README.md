@@ -195,7 +195,7 @@ Execute `ui5 serve` to start the app and open a new browser window to access htt
 
 ## Walkthrough - Routing with Parameters
 
-In this step, we willpass over the information which item has been selected to the detail page and show the details for the item there.
+In this step, we will pass over the information which item has been selected to the detail page and show the details for the item there.
 
 1. Update manifest.json
 
@@ -244,7 +244,7 @@ Update `webapp/manifest.json` with the following content. We add a navigation pa
 
 2. Update Detail.view.xml
 
-Update `webapp/view/Detail.view.xml` with the following content. We add a `controller` that will take care of setting the item's context on the view and bind some properties of the `ObjectHeader` to the fields of our invoice model. 
+Update `webapp/view/Detail.view.xml` with the following content. We add a `controller` that will take care of setting the item's context on the view and bind some properties of the `ObjectHeader` to the fields of our invoice model.
 
 ```xml
 <mvc:View
@@ -294,7 +294,7 @@ Create `webapp/controller/Detail.controller.js` with the following content. In t
 
 In the `onObjectMatched` method that is triggered by the router we receive an event that we can use to access the URL and navigation parameters. The arguments parameter will return an object that corresponds to our navigation parameters from the route pattern. We access the `invoicePath` that we set in the invoice list controller and call the `bindElement` function on the view to set the context. We have to add the root `/` in front of the path again that was removed for passing on the path as a URL parameter. Because we have encoded the binding path part in the URL before, we have to decode it again with decodeURIComponent.
 
-The `bindElement` function is creating a binding context for a SAPUI5 control and receives the model name as well as the path to an item in a configuration object. This will trigger an update of the UI controls that we connected with fields of the invoice model. 
+The `bindElement` function is creating a binding context for a SAPUI5 control and receives the model name as well as the path to an item in a configuration object. This will trigger an update of the UI controls that we connected with fields of the invoice model.
 
 ```js
 sap.ui.define([
@@ -322,6 +322,65 @@ sap.ui.define([
 5. Run UI5 app
 
 Execute `ui5 serve` to start the app and open a new browser window to access http://localhost:8080/index.html. You should now see the invoice details on a separate page when you click on an item in the list of invoices.
+
+## Walkthrough - Routing Back and History
+
+In this step, we will add a back button to the detail page and implement a function that shows our overview page again.
+
+1. Update Detail.view.xml
+
+Update `webapp/view/Detail.view.xml` with the following content. In the detail page, we tell the control to display a `back` button by setting the parameter `showNavButton` to true and register an event handler that is called when the back button is pressed.
+
+```xml
+<mvc:View
+  controllerName="ui5.walkthrough.controller.Detail"
+  xmlns="sap.m"
+  xmlns:mvc="sap.ui.core.mvc">
+  <Page
+    title="{i18n>detailPageTitle}"
+    showNavButton="true"
+    navButtonPress=".onNavBack">
+    <ObjectHeader intro="{invoice>ShipperName}" title="{invoice>ProductName}"/>
+  </Page>
+</mvc:View>
+```
+
+2. Update Detail.controller.js
+
+Update `webapp/controller/Detail.controller.js` with the following content. We load a new dependency called `History` that helps us to manage the navigation history from the `sap.ui.core.routing` namespace and add the implementation for the event handler to our detail page controller.
+
+In the event handler `onNavBack` we access the navigation history and try to determine the previous hash. In contrast to the browser history, we will get a valid result only if a navigation step inside our app has already happened. Then we will simply use the browser history to go back to the previous page. If no navigation has happened before, we can tell the router to go to our overview page directly. The third parameter true tells the router to replace the current history state with the new one since we actually do a back navigation by ourselves. The second parameter is an empty object ({}) as we do not pass any additional parameters to this route.
+
+This implementation is a bit better than the browser's back button for our use case. The browser would simply go back one step in the history even though we were on another page outside of the app. In the app, we always want to go back to the overview page even if we came from another link or opened the detail page directly with a bookmark.
+
+```js
+sap.ui.define([
+  "sap/ui/core/mvc/Controller",
+  "sap/ui/core/routing/History"
+], (Controller, History) => {
+  "use strict";
+
+  return Controller.extend("ui5.walkthrough.controller.Detail", {
+    ...
+
+    onNavBack() {
+      const oHistory = History.getInstance();
+      const sPreviousHash = oHistory.getPreviousHash();
+
+      if (sPreviousHash !== undefined) {
+        window.history.go(-1);
+      } else {
+        const oRouter = this.getOwnerComponent().getRouter();
+        oRouter.navTo("overview", {}, true);
+      }
+    }
+  });
+});
+```
+
+3. Run UI5 app
+
+Execute `ui5 serve` to start the app and open a new browser window to access http://localhost:8080/index.html. A `back` button is now displayed on the detail page. If you click on it, you will go back to the `overview` page. You can try it by loading the detail page in a `new tab` directly and clicking on the back button, it will still go back to the `overview` page.
 
 ## Reference
 
