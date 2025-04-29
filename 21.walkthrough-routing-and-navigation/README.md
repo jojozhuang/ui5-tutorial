@@ -4,203 +4,198 @@ Copy all files from the last `20.walkthrough-mock-server`.
 
 ## Walkthrough - Routing and Navigation
 
-In this step, we will set up mock server for local development.
+In this step, we will split the content and put it on separate pages. We will have two pages. The first is the invoice list page and the second is the invoice detail page. We will add navigation between these two pages.
 
-1. Create mockServer.html
+1. Update manifest.json
 
-Create `webapp/test/mockServer.html` with the following content. We copy the `index.html` to a separate file in the `webapp/test` folder and name it `mockServer.html`. We will now use this file to run our app in test mode with mock data loaded from a JSON file. Test pages should not be placed in the application root folder but in a subfolder called `test` to clearly separate productive and test coding.
+Update `webapp/manifest.json` with the following content. We add a new `routing` section to the `sap.ui5` part of the descriptor. There are three subsections that define the routing and navigation structure of the app:
 
-From this point on, you have two different entry pages: One for the real "connected" app (index.html) and one for local testing (mockServer.html). You can freely decide if you want to do the next steps on the real service data or on the local data within the app.
+- config: This section contains the global router configuration and default values that apply for all routes and targets. We define the router class that we want to use and where our views are located in the app. To load and display views automatically, we also specify which control is used to display the pages and what aggregation should be filled when a new page is displayed.
 
-We modify the mockServer.html file and change the page title to distinguish it from the productive start page. In the bootstrap, the `data-sap-ui-resource-roots` property is also changed. The namespace now points to the folder above ("../"), because the mockServer.html file is now in a subfolder of the webapp folder. Instead of loading the app component directly, we now call a script `initMockServer.js`.
+- routes: Each route defines a name, a pattern, and one or more targets to navigate to when the route has been hit. The pattern is basically the URL part that matches to the route, we define two routes for our app. The first one is a default route that will show the overview page with the content from the previous steps, and the second is the detail route with the URL pattern detail that will show a new page.
 
-```html
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>SAPUI5 UI5 Walkthrough - Mockserver Test Page</title>
-  <script
-    id="sap-ui-bootstrap"
-    src="../resources/sap-ui-core.js"
-    data-sap-ui-theme="sap_horizon"
-    data-sap-ui-compat-version="edge"
-    data-sap-ui-async="true"
-    data-sap-ui-on-init="module:ui5/walkthrough/test/initMockServer"
-    data-sap-ui-resource-roots='{
-      "ui5.walkthrough": "../"
-    }'>
-  </script>
-</head>
-<body class="sapUiBody" id="content">
-  <div data-sap-ui-component data-name="ui5.walkthrough" data-id="container" data-settings='{"id" : "walkthrough"}'></div>
-</body>
-</html>
-```
-
-2. Create initMockServer.js
-
-Create `webapp/test/initMockServer.js` with the following content. The first dependency is a file called mockserver.js that will be located in the localService folder later.
-
-The mockserver depencency that we are about to implement is our local test server. Its init method is immediately called before we load the component. This way we can catch all requests that would go to the "real" service and process them locally by our test server when launching the app with the mockServer.html file. The component itself does not "know" that it will now run in test mode.
-
-```js
-sap.ui.define([
-  "../localService/mockserver"
-], (mockserver) => {
-  "use strict";
-
-  // initialize the mock server
-  mockserver.init();
-
-  // initialize the embedded component on the HTML page
-  sap.ui.require(["sap/ui/core/ComponentSupport"]);
-});
-```
-
-3. Create Invoices.json
-
-Create `webapp/localService/mockdata/Invoices.json` with the following content.
+- targets: A target defines a view, or even another component, that is displayed; it is associated with one or more routes, and it can also be displayed manually from within the app. Whenever a target is displayed, the corresponding view is loaded and shown in the app. In our app we simply define two targets with a view name that corresponds to the target name.
 
 ```json
-[
-  {
-    "ProductName": "Pineapple",
-    "Quantity": 21,
-    "ExtendedPrice": 87.2,
-    "ShipperName": "Fun Inc.",
-    "ShippedDate": "2015-04-01T00:00:00",
-    "Status": "A"
-  },
-  {
-    "ProductName": "Milk",
-    "Quantity": 4,
-    "ExtendedPrice": 10,
-    "ShipperName": "ACME",
-    "ShippedDate": "2015-02-18T00:00:00",
-    "Status": "B"
-  },
-  {
-    "ProductName": "Canned Beans",
-    "Quantity": 3,
-    "ExtendedPrice": 6.85,
-    "ShipperName": "ACME",
-    "ShippedDate": "2015-03-02T00:00:00",
-    "Status": "B"
-  },
-  {
-    "ProductName": "Salad",
-    "Quantity": 2,
-    "ExtendedPrice": 8.8,
-    "ShipperName": "ACME",
-    "ShippedDate": "2015-04-12T00:00:00",
-    "Status": "C"
-  },
-  {
-    "ProductName": "Bread",
-    "Quantity": 1,
-    "ExtendedPrice": 2.71,
-    "ShipperName": "Fun Inc.",
-    "ShippedDate": "2015-01-27T00:00:00",
-    "Status": "A"
+{
+  ...
+  "sap.ui5": {
+    ...
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "type": "View",
+        "viewType": "XML",
+        "path": "ui5.walkthrough.view",
+        "controlId": "app",
+        "controlAggregation": "pages"
+      },
+      "routes": [
+        {
+          "pattern": "",
+          "name": "overview",
+          "target": "overview"
+        },
+        {
+          "pattern": "detail",
+          "name": "detail",
+          "target": "detail"
+        }
+      ],
+      "targets": {
+        "overview": {
+          "id": "overview",
+          "name": "Overview"
+        },
+        "detail": {
+          "id": "detail",
+          "name": "Detail"
+        }
+      }
+    }
   }
-]
+}
 ```
 
-4. Create metadata.xml
+2. Update Component.js
 
-Create `webapp/localService/metadata.xml` with the following content. The metadata file contains information about the service interface and does not need to be written manually. It can be accessed directly from the "real" service by calling the service URL and adding $metadata at the end (e.g. in our case http://services.odata.org/V2/Northwind/Northwind.svc/$metadata). The mock server will read this file to simulate the real OData service, and will return the results from our local source files in the proper format so that it can be consumed by the app (either in XML or in JSON format).
+Update `webapp/Component.js` with the following content. In the component `init` method, we now add a call to initialize the `router`. We do not need to instantiate the router manually, it is automatically instantiated based on our AppDescriptor configuration and assigned to the component.
 
-For simplicity, we have removed all content from the original Northwind OData metadata document that we do not need in our scenario. We have also added the status field to the metadata since it is not available in the real Northwind service.
-
-```xml
-<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">
-  <edmx:DataServices m:DataServiceVersion="1.0" m:MaxDataServiceVersion="3.0"
-    xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
-    <Schema Namespace="NorthwindModel" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
-      <EntityType Name="Invoice">
-        <Key>
-          <PropertyRef Name="ProductName"/>
-          <PropertyRef Name="Quantity"/>
-          <PropertyRef Name="ShipperName"/>
-        </Key>
-        <Property Name="ShipperName" Type="Edm.String" Nullable="false" MaxLength="40" FixedLength="false"
-          Unicode="true"/>
-        <Property Name="ProductName" Type="Edm.String" Nullable="false" MaxLength="40" FixedLength="false"
-          Unicode="true"/>
-        <Property Name="Quantity" Type="Edm.Int16" Nullable="false"/>
-        <Property Name="ExtendedPrice" Type="Edm.Decimal" Precision="19" Scale="4"/>
-        <Property Name="Status" Type="Edm.String" Nullable="false" MaxLength="1" FixedLength="false"
-          Unicode="true"/>
-      </EntityType>
-    </Schema>
-    <Schema Namespace="ODataWebV2.Northwind.Model" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
-      <EntityContainer Name="NorthwindEntities" m:IsDefaultEntityContainer="true" p6:LazyLoadingEnabled="true"
-        xmlns:p6="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
-        <EntitySet Name="Invoices" EntityType="NorthwindModel.Invoice"/>
-      </EntityContainer>
-    </Schema>
-  </edmx:DataServices>
-</edmx:Edmx>
-```
-
-5. Create mockserver.js
-
-Create `webapp/localService/mockserver.js` with the following content. We load the standard SAPUI5 MockServer module as a dependency and create a helper object that defines an init method to start the server. This method is called before the component initialization in the mockServer.html file above. The init method creates a MockServer instance with the same URL as the real service calls.
-
-The URL in the `rootUri` configuration parameter has to point to the same URL as defined in the uri property of the data source in the manifest.json descriptor file. In the manifest.json, UI5 automatically interprets a relative URL as being relative to the application namespace. In the JavaScript code, you can ensure this by using the `sap.ui.require.toUrl` method. The sap/ui/core/util/MockServer then catches every request to the real service and returns a response. Next, we set two global configuration settings that tell the server to respond automatically and introduce a delay of 500 ms to imitate a typical server response time. Otherwise, we would have to call the respond method on the MockServer manually to simulate the call.
-
-To simulate a service, we can simply call the simulate method on the MockServer instance with the path to our newly created metadata.xml. This will read the test data from our local file system and set up the URL patterns that will mimic the real service.
-
-Finally, we call start on oMockServer. From this point, each request to the URL pattern rootUri will be processed by the MockServer. If you switch from the index.html file to the mockServer.html file in the browser, you can now see that the test data is displayed from the local sources again, but with a short delay. The delay can be specified with the URI parameter serverDelay.
-
-This approach is perfect for local testing, even without any network connection. This way your development does not depend on the availability of a remote server, i.e. to run your tests.
-
-Try calling the app with the index.html file and the mockServer.html file to see the difference. If the real service connection cannot be made, for example when there is no network connection, you can always fall back to the local test page.
+Initializing the router will evaluate the current URL and load the corresponding view automatically. This is done with the help of the routes and targets that have been configured in the manifest.json. If a route has been hit, the view of its corresponding target is loaded and displayed.
 
 ```js
 sap.ui.define([
-  "sap/ui/core/util/MockServer"
-], (MockServer) => {
+  "sap/ui/core/UIComponent",
+  "sap/ui/model/json/JSONModel"
+], (UIComponent, JSONModel) => {
   "use strict";
 
-  return {
+  return UIComponent.extend("ui5.walkthrough.Component", {
+   ...
+
     init() {
-      // create
-      const oMockServer = new MockServer({
-        rootUri: sap.ui.require.toUrl("ui5/walkthrough") + "/V2/Northwind/Northwind.svc/"
-      });
+      ...
 
-      const oUrlParams = new URLSearchParams(window.location.search);
-
-      // configure mock server with a delay
-      MockServer.config({
-        autoRespond: true,
-        autoRespondAfter: oUrlParams.get("serverDelay") || 500
-      });
-
-      // simulate
-      const sPath = sap.ui.require.toUrl("ui5/walkthrough/localService");
-      oMockServer.simulate(sPath + "/metadata.xml", sPath + "/mockdata");
-
-      // start
-      oMockServer.start();
+      // create the views based on the url/hash
+      this.getRouter().initialize();
     }
-  };
+  });
 });
 ```
 
-6. Update package.json
+3. Create Overview.view.xml
 
-Add a new script into `package.json` to start the app with mock server.
+Create `webapp/view/Overview.view.xml` with the following content. We move the content of `Shell` from `App.view.xml` to a new `Overview` view. For simplicity, we do not change the controller as it only contains our helper method to open the dialog, that means we reuse the controller `ui5.walkthrough.controller.App` for two different views (for the new overview and for the app view). However, two instances of that controller are instantiated at runtime. In general, one instance of a controller is instantiated for each view that references the controller.
 
-```js
-"start-mock": "ui5 serve -o test/mockServer.html"
+```xml
+<mvc:View
+  controllerName="ui5.walkthrough.controller.App"
+  xmlns="sap.m"
+  xmlns:mvc="sap.ui.core.mvc"
+  displayBlock="true">
+  <Page title="{i18n>homePageTitle}">
+    <content>
+      <mvc:XMLView viewName="ui5.walkthrough.view.HelloPanel" />
+      <mvc:XMLView viewName="ui5.walkthrough.view.InvoiceList" />
+    </content>
+  </Page>
+</mvc:View>
 ```
 
-7. Run UI5 app
+4. Update App.view.xml
 
-Execute `npm run start-mock` to start the app and open a new browser window to access http://localhost:8080/index.html. You should see the list of invoices served by the Mock Server.
+Update `webapp/view/App.view.xml` with the following content. Our App view is now only containing the empty app tag. The router will automatically add the view that corresponds to the current URL into the app control. The router identifies the app control with the ID that corresponds to the property `controlId`: `app` in the AppDescriptor.
+
+```xml
+<mvc:View
+  controllerName="ui5.walkthrough.controller.App"
+  xmlns="sap.m"
+  xmlns:mvc="sap.ui.core.mvc"
+  displayBlock="true">
+  <Shell>
+    <App class="myAppDemoWT" id="app"/>
+  </Shell>
+</mvc:View>
+```
+
+5. Create Detail.view.xml
+
+Create `webapp/view/Detail.view.xml` with the following content. We add a second view for the detail view. It only contains a page and an `ObjectHeader` control that displays the static text Invoice for now.
+
+```xml
+<mvc:View
+  controllerName="ui5.walkthrough.controller.Detail"
+  xmlns="sap.m"
+  xmlns:mvc="sap.ui.core.mvc">
+  <Page
+    title="{i18n>detailPageTitle}"
+    showNavButton="true"
+    navButtonPress=".onNavBack">
+    <ObjectHeader intro="{invoice>ShipperName}" title="{invoice>ProductName}"/>
+  </Page>
+</mvc:View>
+```
+
+5. Update i18n.properties
+
+Update `webapp/i18n/i18n.properties` with the following content. We add a new string to the resource bundle for the detail page title.
+
+```sh
+# Detail Page
+detailPageTitle=Walkthrough - Details
+```
+
+6. Update InvoiceList.view.xml
+
+Update `webapp/view/InvoiceList.view.xml` with the following content. In the invoice list view we add a `press` event to the list item and set the item `type` to `Navigation` so that the item can actually be clicked.
+
+```xml
+<mvc:View
+  controllerName="ui5.walkthrough.controller.InvoiceList"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:mvc="sap.ui.core.mvc">
+  <List>
+    ...
+    <items>
+      <ObjectListItem
+        ...
+        type="Navigation"
+        press=".onPress">
+        ...
+      </ObjectListItem>
+    </items>
+  </List>
+</mvc:View>
+```
+
+7. Update InvoiceList.controller.js
+
+Update `webapp/controller/InvoiceList.controller.js` with the following content. We add the event handler function `onPress` to the controller of our invoices list. We access the router instance for our app by calling the helper method `getOwnerComponent().getRouter()`. On the router we call the `navTo` method to navigate to the detail route that we specified in the routing configuration.
+
+```js
+sap.ui.define([
+  "sap/ui/core/mvc/Controller",
+  "sap/ui/model/json/JSONModel",
+  "sap/ui/model/Filter",
+  "sap/ui/model/FilterOperator"
+], (Controller, JSONModel, Filter, FilterOperator) => {
+  "use strict";
+
+  return Controller.extend("ui5.walkthrough.controller.InvoiceList", {
+    ...
+
+    onPress(oEvent) {
+      const oRouter = this.getOwnerComponent().getRouter();
+      oRouter.navTo("detail");
+    }
+  });
+});
+```
+
+8. Run UI5 app
+
+Execute `npm run start-mock` to start the app and open a new browser window to access http://localhost:8080/index.html. You should see the detail page when you click an item in the list of invoices.
 
 ## Reference
 
